@@ -1,0 +1,462 @@
+---
+#This will create this metric in all the tiers, under this path. Please make sure to have a trailing |
+#metricPrefix: "Custom Metrics|AWS Kinesis Data Firehose|"
+
+#This will create it in specific Tier aka Component. Replace <COMPONENT_ID>. Please make sure to have a trailing |.
+#To find out the COMPONENT_ID, please see the screen shot here https://docs.appdynamics.com/display/PRO42/Build+a+Monitoring+Extension+Using+Java
+
+# Metric list can be found here : https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/elb-metricscollected.html
+
+metricPrefix: "Server|Component:<TIER_ID>|Custom Metrics|AWS Kinesis Data Firehose|"
+
+accounts:
+  - awsAccessKey: ""
+    awsSecretKey: ""
+    displayAccountName: ""
+    # Regions where cloudwatch is registered
+    # Allowed values: ap-southeast-1, ap-southeast-2, ap-northeast-1, eu-central-1,
+    #                 us-east-1, eu-west-1, us-west-1, us-west-2, sa-east-1
+    #
+    regions: ["us-west-2"]
+
+credentialsDecryptionConfig:
+  enableDecryption: "false"
+  encryptionKey:
+
+proxyConfig:
+  host: 54.72.204.154
+  port: 8081
+  username:
+  password:
+
+# TODO check dimension
+dimensions:
+  - name: "DeliveryStreamName"
+    displayName: "DeliveryStreamName"
+    values: [".*"]
+
+concurrencyConfig:
+  noOfAccountThreads: 3
+  noOfRegionThreadsPerAccount: 3
+  noOfMetricThreadsPerRegion: 3
+  #Thread timeout in seconds
+  threadTimeOut: 30
+
+#Allowed values are Basic and Detailed. Refer https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-cloudwatch-new.html for more information
+# Basic will fire CloudWatch API calls every 5 minutes
+# Detailed will fire CloudWatch API calls every 1 minutes
+cloudWatchMonitoring: "Basic"
+
+regionEndPoints:
+  us-east-1 : monitoring.us-east-1.amazonaws.com
+  us-east-2 : monitoring.us-east-2.amazonaws.com
+  us-west-1 : monitoring.us-west-1.amazonaws.com
+  us-west-2 : monitoring.us-west-2.amazonaws.com
+  ap-northeast-1 : monitoring.ap-northeast-1.amazonaws.com
+  ap-northeast-2: monitoring.ap-northeast-2.amazonaws.com
+  ap-northeast-3 : monitoring.ap-northeast-3.amazonaws.com
+  ap-south-1 : monitoring.ap-south-1.amazonaws.com
+  ap-southeast-1 : monitoring.ap-southeast-1.amazonaws.com
+  ap-southeast-2 : monitoring.ap-southeast-2.amazonaws.com
+  ca-central-1 : monitoring.ca-central-1.amazonaws.com
+  cn-north-1 : monitoring.cn-north-1.amazonaws.com.cn
+  cn-northwest-1 : monitoring.cn-northwest-1.amazonaws.com.cn
+  eu-central-1 : monitoring.eu-central-1.amazonaws.com
+  eu-west-1 : monitoring.eu-west-1.amazonaws.com
+  eu-west-2 : monitoring.eu-west-2.amazonaws.com
+  eu-west-3 : monitoring.eu-west-3.amazonaws.com
+  sa-east-1 : monitoring.sa-east-1.amazonaws.com
+  us-gov-west-1 : monitoring.us-gov-west-1.amazonaws.com
+
+# Global metrics config for all accounts
+metricsConfig:
+    # By default, all metrics retrieved from cloudwatch are 'Average' values.
+    # This option allows you to override the metric type.
+    #
+    # Allowed statTypes are: ave, max, min, sum, samplecount
+    #
+    # Note: Irrespective of the metric type, value will still be reported as
+    # Observed value to the Controller
+    includeMetrics:
+    # ------- start of Service level Cloudwatch metrics -------
+    # start of metrics for S3 backup
+    # These metrics include BackupToS3.Bytes, BackupToS3.DataFreshness, BackupToS3.Records, BackupToS3.Success.
+    # Use these if you have setup S3 as backup in Firehose
+       - name: "BackupToS3.Bytes"
+         alias: "S3 Backup Bytes"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "BackupToS3.DataFreshness"
+         alias: "S3 Backup Data Freshness (Seconds)"
+         statType: "max"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "BackupToS3.Records"
+         alias: "S3 Backup Records Delivered (Count)"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "BackupToS3.Success"
+         alias: "S3 Backup Success"
+         statType: "ave"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+    # end of metrics for S3 backup
+    # start of metrics for Kinesis Data Stream used as data source
+    # These metrics include DataReadFromKinesisStream.Bytes, DataReadFromKinesisStream.Records, KinesisMillisBehindLatest
+       - name: "DataReadFromKinesisStream.Bytes"
+         alias: "DataReadFromKinesisStream Bytes"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "DataReadFromKinesisStream.Records"
+         alias: "DataReadFromKinesisStream Records (Count)"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "KinesisMillisBehindLatest"
+         alias: "Kinesis Millis Behind Latest (Millisecond)"
+         statType: "max"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+    # end of metrics for Kinesis Data Stream used as data source
+    # start of metrics used when ElasticSearch is used as delivery destination
+    # These metrics include DeliveryToElasticsearch.Bytes, DeliveryToElasticsearch.Records, DeliveryToElasticsearch.Success
+       - name: "DeliveryToElasticsearch.Bytes"
+         alias: "DeliveryToElasticsearch Bytes"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "DeliveryToElasticsearch.Records"
+         alias: "DeliveryToElasticsearch Records (count)"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "DeliveryToElasticsearch.Success"
+         alias: "DeliveryToElasticsearch Success"
+         statType: "ave"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+    # end of metrics when ElasticSearch is used as delivery destination
+    # start of metrics used when RedShift is used as delivery destination
+    # These metrics include DeliveryToRedshift.Bytes, DeliveryToRedshift.Records, DeliveryToRedshift.Success
+       - name: "DeliveryToRedshift.Bytes"
+         alias: "DeliveryToRedshift Bytes"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "DeliveryToRedshift.Records"
+         alias: "DeliveryToRedshift Records (count)"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "DeliveryToRedshift.Success"
+         alias: "DeliveryToRedshift Success"
+         statType: "ave"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+    # end of metrics when Redshift is used as delivery destination
+    # start of metrics used when S3 is used as delivery destination
+    # These metrics include DeliveryToS3.Bytes, DeliveryToS3.Records, DeliveryToS3.Success
+       - name: "DeliveryToS3.Bytes"
+         alias: "DeliveryToS3 Bytes"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "DeliveryToS3.DataFreshness"
+         alias: "DeliveryToS3 Data Freshness (Seconds)"
+         statType: "max"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "DeliveryToS3.Records"
+         alias: "DeliveryToS3 Records (count)"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "DeliveryToS3.Success"
+         alias: "DeliveryToS3 Success"
+         statType: "ave"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+    # end of metrics when S3 is used as delivery destination
+    # start of metrics used when Splunk is used as delivery destination
+    # These metrics include DeliveryToSplunk.Bytes, DeliveryToSplunk.Records, DeliveryToSplunk.Success
+       - name: "DeliveryToSplunk.Bytes"
+         alias: "DeliveryToSplunk Bytes"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "DeliveryToSplunk.DataFreshness"
+         alias: "DeliveryToSplunk Data Freshness (Seconds)"
+         statType: "max"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "DeliveryToSplunk.Records"
+         alias: "DeliveryToSplunk Records (count)"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "DeliveryToSplunk.Success"
+         alias: "DeliveryToSplunk Success"
+         statType: "ave"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+    # end of metrics when Splunk is used as delivery destination
+       - name: "IncomingBytes"
+         alias: "Incoming Bytes"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "IncomingRecords"
+         alias: "Incoming Records (count)"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+    # ------- end of Service level Cloudwatch metrics -------
+    # ------- start of API-level Cloudwatch metrics -------
+       - name: "DescribeDeliveryStream.Latency"
+         alias: "DescribeDeliveryStream Latency"
+         statType: "ave"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "DescribeDeliveryStream.Requests"
+         alias: "DescribeDeliveryStream Requests (count)"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "ListDeliveryStreams.Latency"
+         alias: "ListDeliveryStreams Latency"
+         statType: "ave"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "ListDeliveryStreams.Requests"
+         alias: "ListDeliveryStreams Requests (count)"
+         statType: "ave"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "PutRecord.Bytes"
+         alias: "PutRecord Bytes"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "PutRecord.Latency"
+         alias: "PutRecord.Latency"
+         statType: "ave"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "PutRecord.Requests"
+         alias: "PutRecord Requests (count)"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "PutRecordBatch.Bytes"
+         alias: "PutRecordBatch Bytes"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "PutRecordBatch.Latency"
+         alias: "PutRecordBatch Latency"
+         statType: "ave"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "PutRecordBatch.Requests"
+         alias: "PutRecordBatch Requests (count)"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "PutRecordBatch.Records"
+         alias: "PutRecordBatch Records (count)"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "ThrottledDescribeStream"
+         alias: "Throttled DescribeStream (count)"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "ThrottledGetRecords"
+         alias: "Throttled GetRecords"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "ThrottledGetShardIterator"
+         alias: "Throttled GetShardIterator"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "UpdateDeliveryStream.Latency"
+         alias: "UpdateDeliveryStream Latency"
+         statType: "ave"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "UpdateDeliveryStream.Requests"
+         alias: "UpdateDeliveryStream Requests (count)"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+    # ------- end of API-level Cloudwatch metrics -------
+    # ------- start of Data Transformation Cloudwatch metrics -------
+       - name: "ExecuteProcessing.Duration"
+         alias: "ExecuteProcessing Duration (Millisecond)"
+         statType: "ave"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "ExecuteProcessing.Success"
+         alias: "ExecuteProcessing Success"
+         statType: "ave"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "SucceedProcessing.Records"
+         alias: "SucceedProcessing Records (count)"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+       - name: "SucceedProcessing.Bytes"
+         alias: "SucceedProcessing Bytes"
+         statType: "sum"
+         aggregationType: "AVERAGE"
+         timeRollUpType: "AVERAGE"
+         clusterRollUpType: "INDIVIDUAL"
+         delta: false
+         multiplier: 1
+    # ------- end of Data Transformation Cloudwatch metrics -------
+    metricsTimeRange:
+      startTimeInMinsBeforeNow: 5
+      endTimeInMinsBeforeNow: 0
+
+    # Rate limit ( per second ) for GetMetricStatistics, default value is 400. https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_limits.html
+    getMetricStatisticsRateLimit: 400
+
+    #
+    # The max number of retry attempts for failed retryable requests
+    # (ex: 5xx error responses from a service) or throttling errors
+    #
+    maxErrorRetrySize: 0
+...
