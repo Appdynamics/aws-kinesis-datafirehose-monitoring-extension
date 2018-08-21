@@ -22,11 +22,12 @@
     <groupId>com.appdynamics.extensions</groupId>
     <artifactId>aws-kinesis-datafirehose-monitoring-extension</artifactId>
     <version>1.0.0</version>
-    <name>AWS Kinesis Data Firehose Monitoring Extension</name>
+    <name>AWS Kinesis Data Firehose Monitor</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
-        <target.dir>${project.build.directory}/aws-kinesis-datafirehose-monitoring-extension</target.dir>
+        <target.name>AWSKinesisDataFirehoseMonitor</target.name>
+        <target.dir>${project.build.directory}/${target.name}</target.dir>
     </properties>
 
     <dependencies>
@@ -125,13 +126,12 @@
                                     <fileset dir="src/main/resources/conf" includes="monitor.xml,config.yml"/>
                                     <fileset dir="${project.basedir}" includes="LICENSE.txt"/>
                                     <fileset dir="${project.basedir}" includes="NOTICE.txt"/>
-
                                 </copy>
                                 <copy todir="${target.dir}">
                                     <fileset dir="${project.build.directory}" includes="${project.artifactId}.${project.packaging}"/>
                                 </copy>
                                 <zip destfile="${target.dir}-${project.version}.zip">
-                                    <zipfileset dir="${target.dir}" filemode="755" prefix="AWSKinesisDataFirehoseMonitoringExtension"/>
+                                    <zipfileset dir="${target.dir}" filemode="755" prefix="${target.name}"/>
                                 </zip>
                                 <delete dir="${target.dir}"/>
                             </target>

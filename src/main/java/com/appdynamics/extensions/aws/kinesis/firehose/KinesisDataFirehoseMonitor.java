@@ -32,7 +32,7 @@ public class KinesisDataFirehoseMonitor extends SingleNamespaceCloudwatchMonitor
 
     public KinesisDataFirehoseMonitor() {
         super(Configuration.class);
-        LOGGER.info(String.format("Using AWS KinesisDataFirehoseMonitor Monitor Version [%s]",
+        LOGGER.info(String.format("Using AWS Kinesis Data Firehose Monitor Version [%s]",
                 this.getClass().getPackage().getImplementationTitle()));
     }
 

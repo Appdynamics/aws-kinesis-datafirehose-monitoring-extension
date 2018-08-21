@@ -14,21 +14,21 @@
   -->
 
 <monitor>
-    <name>AWS Kinesis Data Firehose</name>
+    <name>AWS Kinesis Data Firehose Monitor</name>
     <type>managed</type>
-    <description>AWS Kinesis Data Firehose Monitoring Extension</description>
+    <description>Monitors AWS Kinesis Data Firehose</description>
     <monitor-configuration></monitor-configuration>
     <monitor-run-task>
         <execution-style>periodic</execution-style>
         <execution-frequency-in-seconds>60</execution-frequency-in-seconds>
         <name>AWS Kinesis Data Firehose Monitor Run Task</name>
-        <display-name>AWS Kinesis Data Firehose Task</display-name>
-        <description>AWS Kinesis Data Firehose Task</description>
+        <display-name>AWS Kinesis Data Firehose Monitor Run Task</display-name>
+        <description>AWS Kinesis Data Firehose Run Task</description>
         <type>java</type>
         <execution-timeout-in-secs>60</execution-timeout-in-secs>
         <task-arguments>
             <argument name="config-file" is-required="true" default-value=
-                    "monitors/AWSKinesisDataFirehoseMonitoringExtension/config.yml" />
+                    "monitors/AWSKinesisDataFirehoseMonitor/config.yml" />
         </task-arguments>
         <java-task>
             <classpath>aws-kinesis-datafirehose-monitoring-extension.jar</classpath>

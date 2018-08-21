@@ -22,4 +22,5 @@ package com.appdynamics.extensions.aws.kinesis.firehose.util;
 public final class Constants {
     public static final String DEFAULT_METRIC_PREFIX = "Custom Metrics|AWS Kinesis Data Firehose|";
     public static final String MONITOR_NAME = "KinesisDataFirehoseMonitor";
+    public static final String NAMESPACE = "AWS/Firehose";
 }

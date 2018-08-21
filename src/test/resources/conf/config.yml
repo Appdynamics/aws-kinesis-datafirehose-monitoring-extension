@@ -46,6 +46,9 @@ concurrencyConfig:
 # Basic will fire CloudWatch API calls every 5 minutes
 # Detailed will fire CloudWatch API calls every 1 minutes
 cloudWatchMonitoring: "Basic"
+# If you want to run the extension with a further delay, comment the "cloudWatchMonitoring" above and use the following field
+# which takes in the number of minutes after which the extension should call the cloudwatch metrics
+#cloudWatchMonitoringInterval: 10
 
 regionEndPoints:
   us-east-1 : monitoring.us-east-1.amazonaws.com
@@ -83,7 +86,7 @@ metricsConfig:
     # These metrics include BackupToS3.Bytes, BackupToS3.DataFreshness, BackupToS3.Records, BackupToS3.Success.
     # Use these if you have setup S3 as backup in Firehose
        - name: "BackupToS3.Bytes"
-         alias: "S3 Backup Bytes (Unit - byte; StatType - sum)"
+         alias: "S3 Backup Bytes per minute (Unit - byte; StatType - sum)"
          statType: "sum"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
@@ -94,12 +97,12 @@ metricsConfig:
          alias: "S3 Backup Data Freshness (Unit - sec; StatType - max)"
          statType: "max"
          aggregationType: "AVERAGE"
-         timeRollUpType: "AVERAGE"
+         timeRollUpType: "CURRENT"
          clusterRollUpType: "INDIVIDUAL"
          delta: false
          multiplier: 1
        - name: "BackupToS3.Records"
-         alias: "S3 Backup Records Delivered (Unit - count; StatType - sum)"
+         alias: "S3 Backup Records Delivered per minute (Unit - count; StatType - sum)"
          statType: "sum"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
@@ -118,7 +121,7 @@ metricsConfig:
     # start of metrics for Kinesis Data Stream used as data source
     # These metrics include DataReadFromKinesisStream.Bytes, DataReadFromKinesisStream.Records, KinesisMillisBehindLatest
        - name: "DataReadFromKinesisStream.Bytes"
-         alias: "DataReadFromKinesisStream Bytes (Unit - byte; StatType - sum)"
+         alias: "DataReadFromKinesisStream Bytes per minute (Unit - byte; StatType - sum)"
          statType: "sum"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
@@ -126,7 +129,7 @@ metricsConfig:
          delta: false
          multiplier: 1
        - name: "DataReadFromKinesisStream.Records"
-         alias: "DataReadFromKinesisStream Records (Unit - count; StatType - sum)"
+         alias: "DataReadFromKinesisStream Records per minute (Unit - count; StatType - sum)"
          statType: "sum"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
@@ -137,7 +140,7 @@ metricsConfig:
          alias: "Kinesis Millis Behind Latest (Unit - ms; StatType - max)"
          statType: "max"
          aggregationType: "AVERAGE"
-         timeRollUpType: "AVERAGE"
+         timeRollUpType: "CURRENT"
          clusterRollUpType: "INDIVIDUAL"
          delta: false
          multiplier: 1
@@ -145,7 +148,7 @@ metricsConfig:
     # start of metrics used when ElasticSearch is used as delivery destination
     # These metrics include DeliveryToElasticsearch.Bytes, DeliveryToElasticsearch.Records, DeliveryToElasticsearch.Success
        - name: "DeliveryToElasticsearch.Bytes"
-         alias: "DeliveryToElasticsearch Bytes (Unit - byte; StatType - sum)"
+         alias: "DeliveryToElasticsearch Bytes per minute (Unit - byte; StatType - sum)"
          statType: "sum"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
@@ -153,7 +156,7 @@ metricsConfig:
          delta: false
          multiplier: 1
        - name: "DeliveryToElasticsearch.Records"
-         alias: "DeliveryToElasticsearch Records (Unit - count; StatType - sum)"
+         alias: "DeliveryToElasticsearch Records per minute (Unit - count; StatType - sum)"
          statType: "sum"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
@@ -172,7 +175,7 @@ metricsConfig:
     # start of metrics used when RedShift is used as delivery destination
     # These metrics include DeliveryToRedshift.Bytes, DeliveryToRedshift.Records, DeliveryToRedshift.Success
        - name: "DeliveryToRedshift.Bytes"
-         alias: "DeliveryToRedshift Bytes (Unit - byte; StatType - sum)"
+         alias: "DeliveryToRedshift Bytes per minute (Unit - byte; StatType - sum)"
          statType: "sum"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
@@ -180,7 +183,7 @@ metricsConfig:
          delta: false
          multiplier: 1
        - name: "DeliveryToRedshift.Records"
-         alias: "DeliveryToRedshift Records (Unit - count; StatType - sum)"
+         alias: "DeliveryToRedshift Records per minute (Unit - count; StatType - sum)"
          statType: "sum"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
@@ -199,7 +202,7 @@ metricsConfig:
     # start of metrics used when S3 is used as delivery destination
     # These metrics include DeliveryToS3.Bytes, DeliveryToS3.Records, DeliveryToS3.Success
        - name: "DeliveryToS3.Bytes"
-         alias: "DeliveryToS3 Bytes (Unit - byte; StatType - sum)"
+         alias: "DeliveryToS3 Bytes per minute (Unit - byte; StatType - sum)"
          statType: "sum"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
@@ -210,12 +213,12 @@ metricsConfig:
          alias: "DeliveryToS3 Data Freshness (Unit - sec; StatType - max)"
          statType: "max"
          aggregationType: "AVERAGE"
-         timeRollUpType: "AVERAGE"
+         timeRollUpType: "CURRENT"
          clusterRollUpType: "INDIVIDUAL"
          delta: false
          multiplier: 1
        - name: "DeliveryToS3.Records"
-         alias: "DeliveryToS3 Records (Unit - count; StatType - sum)"
+         alias: "DeliveryToS3 Records per minute (Unit - count; StatType - sum)"
          statType: "sum"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
@@ -234,7 +237,7 @@ metricsConfig:
     # start of metrics used when Splunk is used as delivery destination
     # These metrics include DeliveryToSplunk.Bytes, DeliveryToSplunk.Records, DeliveryToSplunk.Success
        - name: "DeliveryToSplunk.Bytes"
-         alias: "DeliveryToSplunk Bytes (Unit - byte; StatType - sum)"
+         alias: "DeliveryToSplunk Bytes per minute (Unit - byte; StatType - sum)"
          statType: "sum"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
@@ -245,12 +248,12 @@ metricsConfig:
          alias: "DeliveryToSplunk Data Freshness (Unit - sec; StatType - max)"
          statType: "max"
          aggregationType: "AVERAGE"
-         timeRollUpType: "AVERAGE"
+         timeRollUpType: "CURRENT"
          clusterRollUpType: "INDIVIDUAL"
          delta: false
          multiplier: 1
        - name: "DeliveryToSplunk.Records"
-         alias: "DeliveryToSplunk Records (Unit - count; StatType - sum)"
+         alias: "DeliveryToSplunk Records per minute (Unit - count; StatType - sum)"
          statType: "sum"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
@@ -267,7 +270,7 @@ metricsConfig:
          multiplier: 1
     # end of metrics when Splunk is used as delivery destination
        - name: "IncomingBytes"
-         alias: "Incoming Bytes (Unit - byte; StatType - sum)"
+         alias: "Incoming Bytes per minute (Unit - byte; StatType - sum)"
          statType: "sum"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
@@ -275,7 +278,7 @@ metricsConfig:
          delta: false
          multiplier: 1
        - name: "IncomingRecords"
-         alias: "Incoming Records (Unit - count; StatType - sum)"
+         alias: "Incoming Records per minute (Unit - count; StatType - sum)"
          statType: "sum"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
@@ -293,8 +296,8 @@ metricsConfig:
          delta: false
          multiplier: 1
        - name: "DescribeDeliveryStream.Requests"
-         alias: "DescribeDeliveryStream Requests (Unit - count; StatType - sum)"
-         statType: "sum"
+         alias: "DescribeDeliveryStream Requests (Unit - count; StatType - ave)"
+         statType: "ave"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
          clusterRollUpType: "INDIVIDUAL"
@@ -309,15 +312,15 @@ metricsConfig:
          delta: false
          multiplier: 1
        - name: "ListDeliveryStreams.Requests"
-         alias: "ListDeliveryStreams Requests (Unit - count; StatType - sum)"
-         statType: "sum"
+         alias: "ListDeliveryStreams Requests (Unit - count; StatType - ave)"
+         statType: "ave"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
          clusterRollUpType: "INDIVIDUAL"
          delta: false
          multiplier: 1
        - name: "PutRecord.Bytes"
-         alias: "PutRecord Bytes (Unit - byte; StatType - sum)"
+         alias: "PutRecord Bytes per minute (Unit - byte; StatType - sum)"
          statType: "sum"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
@@ -333,15 +336,15 @@ metricsConfig:
          delta: false
          multiplier: 1
        - name: "PutRecord.Requests"
-         alias: "PutRecord Requests (Unit - count; StatType - sum)"
-         statType: "sum"
+         alias: "PutRecord Requests (Unit - count; StatType - ave)"
+         statType: "ave"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
          clusterRollUpType: "INDIVIDUAL"
          delta: false
          multiplier: 1
        - name: "PutRecordBatch.Bytes"
-         alias: "PutRecordBatch Bytes (Unit - byte; StatType - sum)"
+         alias: "PutRecordBatch Bytes per minute (Unit - byte; StatType - sum)"
          statType: "sum"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
@@ -357,15 +360,15 @@ metricsConfig:
          delta: false
          multiplier: 1
        - name: "PutRecordBatch.Requests"
-         alias: "PutRecordBatch Requests (Unit - count; StatType - sum)"
-         statType: "sum"
+         alias: "PutRecordBatch Requests (Unit - count; StatType - ave)"
+         statType: "ave"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
          clusterRollUpType: "INDIVIDUAL"
          delta: false
          multiplier: 1
        - name: "PutRecordBatch.Records"
-         alias: "PutRecordBatch Records (Unit - count; StatType - sum)"
+         alias: "PutRecordBatch Records per minute (Unit - count; StatType - sum)"
          statType: "sum"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
@@ -405,8 +408,8 @@ metricsConfig:
          delta: false
          multiplier: 1
        - name: "UpdateDeliveryStream.Requests"
-         alias: "UpdateDeliveryStream Requests (Unit - count; StatType - sum)"
-         statType: "sum"
+         alias: "UpdateDeliveryStream Requests (Unit - count; StatType - ave)"
+         statType: "ave"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
          clusterRollUpType: "INDIVIDUAL"
@@ -431,16 +434,16 @@ metricsConfig:
          delta: false
          multiplier: 1
        - name: "SucceedProcessing.Records"
-         alias: "SucceedProcessing Records (Unit - count; StatType - sum)"
-         statType: "sum"
+         alias: "SucceedProcessing Records (Unit - count; StatType - ave)"
+         statType: "ave"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
          clusterRollUpType: "INDIVIDUAL"
          delta: false
          multiplier: 1
        - name: "SucceedProcessing.Bytes"
-         alias: "SucceedProcessing Bytes (Unit - byte; StatType - sum)"
-         statType: "sum"
+         alias: "SucceedProcessing Bytes (Unit - byte; StatType - ave)"
+         statType: "ave"
          aggregationType: "AVERAGE"
          timeRollUpType: "AVERAGE"
          clusterRollUpType: "INDIVIDUAL"
