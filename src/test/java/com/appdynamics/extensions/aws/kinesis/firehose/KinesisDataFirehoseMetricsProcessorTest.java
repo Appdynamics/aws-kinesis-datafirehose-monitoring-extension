@@ -86,7 +86,7 @@ public class KinesisDataFirehoseMetricsProcessorTest {
     }
 
     @Test
-    public void createMetricStatsMapForUploadTest() {
+    public void createMetricStatsMapAndCheckMetricPathHierarchyWithDimensionTest() {
         List<Metric> stats = kinesisDataFirehoseMetricsProcessor
                 .createMetricStatsMapForUpload(namespaceMetricStats);
         Metric metric = stats.get(0);
