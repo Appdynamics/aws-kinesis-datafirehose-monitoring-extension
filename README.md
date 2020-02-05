@@ -141,7 +141,7 @@ Always feel free to fork and contribute any changes directly here on [GitHub](ht
 ## Version
    |Name|Version|
    |--------------------------|------------|
-   |Extension Version         |1.0.1       |
+   |Extension Version         |2.0.0       |
    |Controller Compatibility  |4.4 or Later|
-   |Last Update               |22nd March 2019 |
+   |Last Update               |Feb 5, 2020 |
 
