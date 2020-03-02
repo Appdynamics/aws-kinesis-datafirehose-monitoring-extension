@@ -154,4 +154,3 @@ Always feel free to fork and contribute any changes directly here on [GitHub](ht
    |Extension Version         |2.0.1       |
    |Controller Compatibility  |4.4 or Later|
    |Last Update               |March 2, 2020 |
-
