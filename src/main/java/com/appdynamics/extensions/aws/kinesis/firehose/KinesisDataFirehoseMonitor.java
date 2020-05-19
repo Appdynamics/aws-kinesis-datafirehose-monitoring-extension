@@ -18,21 +18,23 @@ package com.appdynamics.extensions.aws.kinesis.firehose;
 import com.appdynamics.extensions.aws.SingleNamespaceCloudwatchMonitor;
 import com.appdynamics.extensions.aws.collectors.NamespaceMetricStatisticsCollector;
 import com.appdynamics.extensions.aws.config.Configuration;
-import static com.appdynamics.extensions.aws.kinesis.firehose.util.Constants.DEFAULT_METRIC_PREFIX;
-import static com.appdynamics.extensions.aws.kinesis.firehose.util.Constants.MONITOR_NAME;
 import com.appdynamics.extensions.aws.metric.processors.MetricsProcessor;
+import com.appdynamics.extensions.logging.ExtensionsLoggerFactory;
 import com.google.common.collect.Lists;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.Map;
+
+import static com.appdynamics.extensions.aws.kinesis.firehose.util.Constants.DEFAULT_METRIC_PREFIX;
+import static com.appdynamics.extensions.aws.kinesis.firehose.util.Constants.MONITOR_NAME;
 
 /**
  * Created by pradeep.nair on 8/7/18.
  */
 public class KinesisDataFirehoseMonitor extends SingleNamespaceCloudwatchMonitor<Configuration> {
 
-    private static final Logger LOGGER = Logger.getLogger(KinesisDataFirehoseMonitor.class);
+    private static final Logger LOGGER = ExtensionsLoggerFactory.getLogger(KinesisDataFirehoseMonitor.class);
 
     public KinesisDataFirehoseMonitor() {
         super(Configuration.class);
