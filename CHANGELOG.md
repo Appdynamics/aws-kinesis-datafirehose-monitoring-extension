@@ -1,4 +1,8 @@
 # AWS Kinesis Firehose Monitoring Extension
+
+## 2.0.3
+ Updated aws-cloudwatch-exts-commons to 2.2.4.
+
 ## 2.0.2
  Updated aws-cloudwatch-exts-commons to 2.2.3.1 to fix log4j issue.
 
