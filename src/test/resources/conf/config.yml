@@ -462,8 +462,6 @@ metricsConfig:
     #
     maxErrorRetrySize: 0
 
-enableHealthChecks: true
-
 controllerInfo:
   controllerHost: ""
   controllerPort: 8080
