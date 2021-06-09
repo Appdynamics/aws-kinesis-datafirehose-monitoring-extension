@@ -1,4 +1,6 @@
 # AWS Kinesis Firehose Monitoring Extension
+## 2.0.4
+Updated aws-cloudwatch-exts-commons to 2.2.5.
 
 ## 2.0.3
  Updated aws-cloudwatch-exts-commons to 2.2.4.
